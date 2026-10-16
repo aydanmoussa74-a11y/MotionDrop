@@ -94,6 +94,7 @@ interface EditorActions {
   setFps: (n: number) => void;
   addOverlay: (o: Overlay) => void;
   removeOverlay: (id: string) => void;
+  moveOverlay: (id: string, x: number, y: number) => void;
   setDurationSec: (n: number) => void;
   setExportFormat: (f: EditorState["exportFormat"]) => void;
   setRecording: (b: boolean) => void;
@@ -129,6 +130,12 @@ export const useEditorStore = create<Store>()(
       overlays: [],
       addOverlay: (o: Overlay) => set((s) => ({ overlays: [...s.overlays, o] })),
       removeOverlay: (id: string) => set((s) => ({ overlays: s.overlays.filter((o) => o.id !== id) })),
+      moveOverlay: (id: string, x: number, y: number) =>
+        set((s) => ({
+          overlays: s.overlays.map((o) =>
+            o.id === id ? { ...o, x, y } : o
+          ),
+        })),
       setHtml: (html) => set({ html }),
       setCss: (css) => set({ css }),
       setJs: (js) => set({ js }),
