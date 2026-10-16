@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.out/
+.harness/
+*.log
+.env
+.env.local
+.env.*.local
+npm-debug.log*
