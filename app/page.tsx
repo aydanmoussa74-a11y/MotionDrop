@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 
 import React, { useRef, useCallback } from "react";
 import { useEditorStore } from "@/stores/editorStore";

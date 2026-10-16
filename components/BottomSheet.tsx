@@ -1,4 +1,4 @@
-"use strict";
+"use client";
 
 import React, { useEffect } from "react";
 import { useHaptics } from "@/hooks/useHaptics";
