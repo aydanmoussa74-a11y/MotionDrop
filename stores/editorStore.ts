@@ -6,6 +6,7 @@ export type Tab = "html" | "css" | "js";
 export interface EditorState {
   html: string;
   css: string;
+  overlays: Overlay[];
   js: string;
   activeTab: Tab;
   fps: number;
@@ -17,6 +18,8 @@ export interface EditorState {
   lastBlob: Blob | null;
   lastObjectUrl: string | null;
 }
+
+export interface Overlay { id: string; type: "text" | "shape"; x: number; y: number; w: number; h: number; text: string; }
 
 const DEFAULT_HTML = `<!DOCTYPE html>
 <html lang="en">
@@ -89,6 +92,8 @@ interface EditorActions {
   setJs: (v: string) => void;
   setActiveTab: (t: Tab) => void;
   setFps: (n: number) => void;
+  addOverlay: (o: Overlay) => void;
+  removeOverlay: (id: string) => void;
   setDurationSec: (n: number) => void;
   setExportFormat: (f: EditorState["exportFormat"]) => void;
   setRecording: (b: boolean) => void;
@@ -104,6 +109,7 @@ type Store = EditorState & EditorActions;
 const defaults: EditorState = {
   html: DEFAULT_HTML,
   css: DEFAULT_CSS,
+  overlays: [],
   js: DEFAULT_JS,
   activeTab: "html",
   fps: 30,
@@ -120,6 +126,9 @@ export const useEditorStore = create<Store>()(
   persist(
     (set, get) => ({
       ...defaults,
+      overlays: [],
+      addOverlay: (o: Overlay) => set((s) => ({ overlays: [...s.overlays, o] })),
+      removeOverlay: (id: string) => set((s) => ({ overlays: s.overlays.filter((o) => o.id !== id) })),
       setHtml: (html) => set({ html }),
       setCss: (css) => set({ css }),
       setJs: (js) => set({ js }),

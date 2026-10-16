@@ -1,11 +1,19 @@
 "use client";
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback } from "react";
 import { useEditorStore } from "@/stores/editorStore";
 import { getRecorder, downloadBlob, exportFileName } from "@/lib/recorder";
 import { useHaptics } from "@/hooks/useHaptics";
 
-export function ExportSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function ExportSheet({
+  open,
+  onClose,
+  previewRef,
+}: {
+  open: boolean;
+  onClose: () => void;
+  previewRef: React.RefObject<HTMLIFrameElement>;
+}) {
   const { vibrate } = useHaptics();
   const { durationSec, fps, exportFormat, isRecording, isExporting, exportProgress, setRecording, setExporting, setProgress, lastObjectUrl, setLastBlob } = useEditorStore((s) => ({
     durationSec: s.durationSec,
@@ -23,8 +31,6 @@ export function ExportSheet({ open, onClose }: { open: boolean; onClose: () => v
   const setExportFormat = useEditorStore((s) => s.setExportFormat);
   const setDurationSec = useEditorStore((s) => s.setDurationSec);
   const setFps = useEditorStore((s) => s.setFps);
-
-  const previewRef = useRef<HTMLIFrameElement>(null);
 
   const handleExport = useCallback(async () => {
     const iframe = previewRef.current;

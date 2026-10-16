@@ -2,7 +2,7 @@
 
 import React, { useRef, useCallback } from "react";
 import { useEditorStore } from "@/stores/editorStore";
-import { PreviewPane } from "@/components/PreviewPane";
+import PreviewPane from "@/components/PreviewPane";
 import { CodeEditor } from "@/components/CodeEditor";
 import { BottomSheet } from "@/components/BottomSheet";
 import { ExportSheet } from "@/components/ExportSheet";
@@ -20,6 +20,7 @@ export default function EditorPage() {
   const [showExport, setShowExport] = React.useState(false);
 
   const { vibrate } = useHaptics();
+  const previewRef = React.useRef<HTMLIFrameElement>(null);
 
   const handleExportPress = useCallback(() => {
     vibrate("light");
@@ -57,7 +58,7 @@ export default function EditorPage() {
         <div
           className="w-full h-[55vh] border-b border-stark-line border-b-4 bg-ink-800 relative overflow-hidden"
         >
-          <PreviewPane className="w-full h-full" />
+          <PreviewPane ref={previewRef} className="w-full h-full" />
           {/* Recording indicator overlay */}
           {isRecording && (
             <div className="absolute top-4 left-4 z-[10] flex items-center gap-2">
@@ -128,7 +129,11 @@ export default function EditorPage() {
 
       {/* ============ EXPORT BOTTOM SHEET ============ */}
       <BottomSheet open={showExport} onClose={handleCloseExport}>
-        <ExportSheet open={showExport} onClose={handleCloseExport} />
+        <ExportSheet
+          open={showExport}
+          onClose={handleCloseExport}
+          previewRef={previewRef}
+        />
       </BottomSheet>
     </div>
   );
